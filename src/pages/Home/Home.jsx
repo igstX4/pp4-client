@@ -17,7 +17,7 @@ const Home = () => {
 
   return (
     <div>
-      <DetailedProductModal isModalOpened={isModalOpened} setIsModalOpened={setIsModalOpened} />
+      <DetailedProductModal setIsRulesModalOpened={setIsRulesModalOpened} isModalOpened={isModalOpened} setIsModalOpened={setIsModalOpened} />
       <RulesModal isModalOpened={isRulesModalOpened} setIsModalOpened={setIsRulesModalOpened} />
       <Header setIsRulesModalOpened={setIsRulesModalOpened} />
       <Degrees />

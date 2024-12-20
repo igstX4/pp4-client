@@ -37,7 +37,7 @@ const Slide = ({ product, setIsModalOpened }) => {
                 <h3>{product.name}</h3>
                 <div className={s.imgDiv}>
                     <img
-                        src={`${baseImageUrl}/uploads/products/${product.img}`}
+                        src={`${product.img}`}
                         alt={product.name}
                         style={{ maxHeight: '305px' }}
                     />

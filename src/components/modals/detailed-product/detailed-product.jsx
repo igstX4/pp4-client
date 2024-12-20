@@ -5,7 +5,7 @@ import { Arrow } from '../../../svgs'
 import axios from '../../../core/axios'
 import { baseImageUrl } from '../../../core/axios'
 
-const DetailedProductModal = ({isModalOpened, setIsModalOpened}) => {
+const DetailedProductModal = ({setIsRulesModalOpened, isModalOpened, setIsModalOpened}) => {
     const [product, setProduct] = useState(null)
     const [loading, setLoading] = useState(false)
 
@@ -59,7 +59,7 @@ const DetailedProductModal = ({isModalOpened, setIsModalOpened}) => {
                         <div className={s.div1}>
                             <div className={s.slide}>
                                 <div className={s.top}>
-                                    <img src={`${baseImageUrl}/uploads/products/${product.img}`} alt={product.name} />
+                                    <img src={`${product.img}`} alt={product.name} />
                                 </div>
                                 <div className={s.middle}>
                                     <h3>{product.name}</h3>
@@ -105,7 +105,7 @@ const DetailedProductModal = ({isModalOpened, setIsModalOpened}) => {
                                 <button onClick={copy} className={s.copyBtn}><CopyIcon /> Скопировать имя PP4</button>
                                 <div className={s.link}>
                                     <AttentionIcon />
-                                    <div>
+                                    <div style={{cursor: 'pointer'}} onClick={() => setIsRulesModalOpened(true)}>
                                         <h6>Правила аренды</h6>
                                         <p>Ознакомиться с правилами!</p>
                                     </div>

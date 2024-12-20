@@ -24,6 +24,7 @@
     }
 
     .content {
+        overflow-y: auto;
         width: 1650px;
         position: relative;
         height: 780px;
@@ -197,7 +198,7 @@
             background-color: #FFC6C6;
             flex-direction: column;
             width: 811px;
-            height: 480px;
+            min-height: 480px;
             border-radius: 25px;
             display: flex;
             align-items: center;
@@ -240,11 +241,11 @@
                 justify-content: flex-start;
                 background-color: #000002;
                 border-radius: 0 0 25px 25px;
-                height: 174px;
+                min-height: 174px;
 
                 .left {
                     padding-top: 20px;
-                    height: 100%;
+                    min-height: 100%;
                     width: 45%;
                     border-right: 1px solid white;
 
@@ -265,6 +266,7 @@
                         gap: 10px;
 
                         .first {
+                            margin-bottom: 10px;
                             color: #FF8888;
                             font-family: 'Lato', sans-serif;
                             font-size: 25px;
