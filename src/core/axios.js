@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export const url = 'http://localhost:5000/api';
-export const baseImageUrl = 'http://localhost:5000'; // Базовый URL для изображений
+export const url = 'https://pp4-server.vercel.app/api';
+export const baseImageUrl = 'https://pp4-server.vercel.app'; // Базовый URL для изображений
 
 const instance = axios.create({
     baseURL: url,
