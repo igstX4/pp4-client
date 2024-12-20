@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Modal from '../../UI/Modal/Modal'
 import s from './edit-product-modal.module.scss'
 import Input from '../../UI/Input/Input'
@@ -24,17 +24,17 @@ const sampleText2 = `4 часа =
 
 const EditProductModal = ({isModalOpened, setIsModalOpened, getProducts, categories, product}) => {
     const [name, setName] = useState('')
-    const [file, setFile] = useState('')
+    const [imgUrl, setImgUrl] = useState('')
     const [mainDescription, setMainDescription] = useState('')
     const [modalDescription, setModalDescription] = useState('')
     const [price, setPrice] = useState('')
     const [error, setError] = useState('')
-    const fileInputRef = useRef(null)
     const [activeCategory, setActiveCategory] = useState('')
 
     useEffect(() => {
         if (product) {
             setName(product.name)
+            setImgUrl(product.img)
             setMainDescription(product.descriptionMain)
             setModalDescription(product.descriptionModal)
             setPrice(product.price)
@@ -42,41 +42,21 @@ const EditProductModal = ({isModalOpened, setIsModalOpened, getProducts, categor
         }
     }, [product])
 
-    const handleFileButton = () => {
-        fileInputRef.current.click()
-    }
-
-    const handleFileChange = (e) => {
-        const file = e.target.files[0]
-        if (file) {
-            if (!file.type.startsWith('image/')) {
-                setError('Пожалуйста, выберите изображение')
-                return
-            }
-            setFile(file)
-        }
-    }
-
     const editProduct = async () => {
         try {
-            const formData = new FormData()
-            formData.append('name', name)
-            if (file) {
-                formData.append('img', file)
+            const productData = {
+                name,
+                img: imgUrl,
+                category: activeCategory,
+                descriptionMain: mainDescription,
+                descriptionModal: modalDescription,
+                price
             }
-            formData.append('category', activeCategory)
-            formData.append('descriptionMain', mainDescription)
-            formData.append('descriptionModal', modalDescription)
-            formData.append('price', price)
 
-            await axios.put(`products/${product._id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
+            await axios.put(`products/${product._id}`, productData)
 
             setName('')
-            setFile('')
+            setImgUrl('')
             setMainDescription('')
             setModalDescription('')
             setPrice('')
@@ -96,7 +76,7 @@ const EditProductModal = ({isModalOpened, setIsModalOpened, getProducts, categor
                 setIsModalOpened(false)
                 setError('')
                 setName(product?.name || '')
-                setFile('')
+                setImgUrl(product?.img || '')
                 setMainDescription(product?.descriptionMain || '')
                 setModalDescription(product?.descriptionModal || '')
                 setPrice(product?.price || '')
@@ -114,29 +94,12 @@ const EditProductModal = ({isModalOpened, setIsModalOpened, getProducts, categor
                     onChange={setName}
                     error={error}
                 />
-                <div className={s.addFileDiv}>
-                    <Input 
-                        disabled={true} 
-                        label={'Изображение URL'} 
-                        placeholder={''} 
-                        value={file ? file.name : 'Текущее изображение'} 
-                    />
-                    <div className={s.btn}>
-                        <input 
-                            type="file" 
-                            ref={fileInputRef}
-                            onChange={handleFileChange}
-                            accept="image/*"
-                            style={{ display: 'none' }}
-                        />
-                        <button 
-                            className={s.blackButton}
-                            onClick={handleFileButton}
-                        >
-                            Изменить файл
-                        </button>
-                    </div>
-                </div>
+                <Input 
+                    label={'URL изображения'} 
+                    placeholder={'Введите URL изображения'} 
+                    value={imgUrl} 
+                    onChange={setImgUrl}
+                />
                 <div className={s.descriptionArea}>
                     <TextArea 
                         label="Характеристики товара(главная)"

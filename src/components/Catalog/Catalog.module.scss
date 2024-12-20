@@ -98,6 +98,7 @@
             .slide {
                 position: relative;
                 width: 500px !important;
+                
                 .status {
                     position: absolute;
                     top: 30px;
@@ -111,11 +112,13 @@
                         margin-left: 0 !important;
                         text-align: center;
                         font-size: 32px;
+                        line-height: 32px;
                         // display: none;
                         margin-left: 20px;
                     }
 
                     .imgDiv {
+                        margin-left: 0;
                         width: 100% !important;
                         // height: 240px;
 
@@ -329,8 +332,9 @@
         }
 
         .imgDiv {
+            margin-left: 7px;
             height: 100%;
-            width: 280px;
+            min-width: 280px;
             display: flex;
             padding: 10px;
             justify-content: center;

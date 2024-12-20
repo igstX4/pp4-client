@@ -63,7 +63,7 @@ const Info = () => {
                     <div className={s.item}><img src={img1} alt="item 1" /></div>
                     <div className={s.item}><img src={img2} alt="item 2" /></div>
                     <div className={s.item}><img src={img3} alt="item 3" /></div>
-                    <div onClick={() => handleClick('footer')} className={s.plusButton}><img src={plus}/></div>
+                    <div className={s.plusButton}><img src={plus}/></div>
                     <div className={s.item}><img src={img4} alt="item 4" /></div>
                     <div className={s.item}><img src={img1} alt="item 1" /></div>
                     <div className={s.item}><img src={img2} alt="item 2" /></div>

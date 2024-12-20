@@ -41,14 +41,13 @@ const Footer = () => {
                         <div onClick={() => window.open('https://www.youtube.com/@malcev007')} className={s.block}>
                             <YoutubeLogo2 />
                         </div>
-                        <div className={s.block}>
+                        <div style={{cursor: 'pointer'}} onClick={() => window.open('https://vk.com/pp4farmtrof')} className={s.block}>
                             <h5>Где клюет?</h5>
                             <p>vk.com/pp4farmtrof</p>
                         </div>
-                        <div className={s.block}>
+                        <div style={{cursor: 'pointer'}} onClick={() => window.open('https://t.me/pp4farmtrof')} className={s.block}>
                             <h5>Telegram канал:</h5>
-                            <p>t.me/pp4farmtrof
-                            </p>
+                            <p>t.me/pp4farmtrof</p>
                         </div>
 
 

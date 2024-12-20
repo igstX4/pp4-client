@@ -87,7 +87,7 @@ const Item = ({ _id, name, price, category, img, isVisible, isCommission, freeDa
                         />
                     </div>
                     <div className={s.imgWrapper}>
-                        <img src={`http://localhost:5000/uploads/products/${img}`} alt={name} />
+                        <img src={img} alt={name} />
                     </div>
                     <div className={s.info}>
                         <p className={s.name}>{name}</p>

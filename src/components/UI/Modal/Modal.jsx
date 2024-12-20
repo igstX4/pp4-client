@@ -34,7 +34,7 @@ const Modal = ({ children, isOpened, setOpen, title, button1, button2 }) => {
     return (
         <div
             className={`${styles.overlay} ${isClosing ? styles.fadeOut : styles.fadeIn}`}
-            onClick={handleClose}
+            // onClick={handleClose}
         >
             <div
                 style={styles}

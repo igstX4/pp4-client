@@ -23,47 +23,28 @@ const sampleText2 = `4 часа =
 
 const AddProductModal = ({isModalOpened, setIsModalOpened, getProducts, categories}) => {
     const [name, setName] = useState('')
-    const [file, setFile] = useState('')
+    const [imgUrl, setImgUrl] = useState('')
     const [mainDescription, setMainDescription] = useState('')
     const [modalDescription, setModalDescription] = useState('')
     const [price, setPrice] = useState('')
     const [error, setError] = useState('')
-    const fileInputRef = useRef(null)
     const [activeCategory, setActiveCategory] = useState('')
-
-    const handleFileButton = () => {
-        fileInputRef.current.click()
-    }
-
-    const handleFileChange = (e) => {
-        const file = e.target.files[0]
-        if (file) {
-            if (!file.type.startsWith('image/')) {
-                setError('Пожалуйста, выберите изображение')
-                return
-            }
-            setFile(file)
-        }
-    }
 
     const createProduct = async () => {
         try {
-            const formData = new FormData()
-            formData.append('name', name)
-            formData.append('img', file)
-            formData.append('category', activeCategory)
-            formData.append('descriptionMain', mainDescription)
-            formData.append('descriptionModal', modalDescription)
-            formData.append('price', price)
+            const productData = {
+                name,
+                img: imgUrl,
+                category: activeCategory,
+                descriptionMain: mainDescription,
+                descriptionModal: modalDescription,
+                price
+            }
 
-            await axios.post('products', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
+            await axios.post('products', productData)
 
             setName('')
-            setFile('')
+            setImgUrl('')
             setMainDescription('')
             setModalDescription('')
             setPrice('')
@@ -83,7 +64,7 @@ const AddProductModal = ({isModalOpened, setIsModalOpened, getProducts, categori
                 setIsModalOpened(false)
                 setError('')
                 setName('')
-                setFile('')
+                setImgUrl('')
                 setMainDescription('')
                 setModalDescription('')
                 setPrice('')
@@ -101,29 +82,12 @@ const AddProductModal = ({isModalOpened, setIsModalOpened, getProducts, categori
                     onChange={setName}
                     error={error}
                 />
-                <div className={s.addFileDiv}>
-                    <Input 
-                        disabled={true} 
-                        label={'Изображение URL'} 
-                        placeholder={''} 
-                        value={file ? file.name : ''} 
-                    />
-                    <div className={s.btn}>
-                        <input 
-                            type="file" 
-                            ref={fileInputRef}
-                            onChange={handleFileChange}
-                            accept="image/*"
-                            style={{ display: 'none' }}
-                        />
-                        <button 
-                            className={s.blackButton}
-                            onClick={handleFileButton}
-                        >
-                            Добавить файл
-                        </button>
-                    </div>
-                </div>
+                <Input 
+                    label={'URL изображения'} 
+                    placeholder={'Введите URL изображения'} 
+                    value={imgUrl} 
+                    onChange={setImgUrl}
+                />
                 <div className={s.descriptionArea}>
                     <TextArea 
                         label="Характеристики товара(главная)"

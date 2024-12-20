@@ -76,38 +76,25 @@
             }
         }
 
-        .timeSelector {
-            width: 280px;
-            background: white;
-
-            .timeHeader {
-                padding: 10px;
+        .timeInput {
+            padding: 12px;
+            border-top: 1px solid #E0E0E0;
+            
+            input {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #E0E0E0;
+                border-radius: 4px;
+                font-size: 14px;
                 text-align: center;
-                border-bottom: 1px solid #E0E0E0;
-                font-weight: 500;
-            }
-
-            .timeGrid {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-                gap: 8px;
-                padding: 12px;
-                max-height: 300px;
-                overflow-y: auto;
-
-                .timeButton {
-                    padding: 8px;
-                    border: 1px solid #E0E0E0;
-                    border-radius: 4px;
-                    background: white;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                    font-size: 14px;
-
-                    &:hover {
-                        background: #ffaaaa;
-                        border-color: #F61D1D;
-                    }
+                
+                &:focus {
+                    outline: none;
+                    border-color: #F61D1D;
+                }
+                
+                &::placeholder {
+                    color: #999;
                 }
             }
         }
