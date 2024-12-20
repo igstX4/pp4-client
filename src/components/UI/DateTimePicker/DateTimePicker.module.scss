@@ -1,0 +1,115 @@
+.datePickerWrapper {
+    position: relative;
+
+    .dateButton {
+        width: 180px;
+        height: 40px;
+        border: 1px solid #E0E0E0;
+        border-radius: 8px;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        padding: 0 12px;
+
+        span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+        }
+
+        &:hover:not(.disabled) {
+            border-color: #ccc;
+        }
+
+        &.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #f5f5f5;
+        }
+    }
+
+    .pickerContainer {
+        position: absolute;
+        top: 45px;
+        right: 0;
+        z-index: 100;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+
+        :global {
+            .react-datepicker {
+                border: none;
+                font-family: inherit;
+                font-size: 0.9em;
+            }
+
+            .react-datepicker__header {
+                background: white;
+                border-bottom: 1px solid #E0E0E0;
+                padding-top: 10px;
+            }
+
+            .react-datepicker__month-container {
+                width: 280px;
+            }
+
+            .react-datepicker__day {
+                width: 1.7rem;
+                line-height: 1.7rem;
+                margin: 0.166rem;
+
+                &--selected {
+                    background-color: #F61D1D !important;
+                }
+
+                &:hover {
+                    background-color: #ffaaaa !important;
+                }
+            }
+        }
+
+        .timeSelector {
+            width: 280px;
+            background: white;
+
+            .timeHeader {
+                padding: 10px;
+                text-align: center;
+                border-bottom: 1px solid #E0E0E0;
+                font-weight: 500;
+            }
+
+            .timeGrid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+                padding: 12px;
+                max-height: 300px;
+                overflow-y: auto;
+
+                .timeButton {
+                    padding: 8px;
+                    border: 1px solid #E0E0E0;
+                    border-radius: 4px;
+                    background: white;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    font-size: 14px;
+
+                    &:hover {
+                        background: #ffaaaa;
+                        border-color: #F61D1D;
+                    }
+                }
+            }
+        }
+    }
+} 

@@ -1,0 +1,26 @@
+.checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    background-color: transparent;
+    border: 1px solid #00000040;
+    display: flex;
+    justify-content: center;
+    transition: .3s;
+    align-items: center;
+}
+.tick {
+    opacity: 0;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s;
+}
+.checked {
+    background-color: #A10000 !important;
+    border-color: #A10000 !important;
+}
+.active {
+    opacity: 1;
+}

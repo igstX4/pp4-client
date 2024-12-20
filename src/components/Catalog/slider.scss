@@ -1,0 +1,87 @@
+.swiper {
+    width: 100vw;
+    height: 100%;
+    overflow: hidden !important;
+    position: relative;
+    
+    &::after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+    
+    @media (max-width: 1400px) {
+        width: 99vw;
+    }
+}
+
+.mySwiper {
+    height: 500px;
+    overflow: visible;
+    transform: translate3d(0, 0, 0) !important;
+}
+
+.swiper-wrapper {
+    transform: translate3d(0, 0, 0) !important;
+}
+
+.swiper-slide {
+    user-select: none;
+    position: relative;
+    z-index: 5;
+    margin: 15px;
+    width: 811px;
+    height: 435px;
+    background: black;
+    filter: brightness(0.9);
+    border-radius: 54.3555px;
+    padding: 20px;
+
+    h1 {
+        color: #F0F0EC;
+        font-family: Inter, sans-serif;
+        font-size: 96px;
+        position: absolute;
+    }
+
+    .content {
+        margin-top: 67px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        p {
+            font-size: 18px;
+            color: #F0F0EC;
+            line-height: 18px;
+        }
+
+        .stars {
+            margin-top: 25px;
+            width: 250px;
+            height: auto;
+        }
+
+        .user {
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+
+            h2 {
+                color: #0000FF;
+                font-size: 36px;
+                margin-bottom: 0px;
+            }
+
+            p {
+                color: #0000FF;
+                font-size: 14px;
+                height: auto;
+            }
+
+            div {
+                margin-left: 10px;
+            }
+        }
+    }
+}

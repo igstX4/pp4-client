@@ -1,0 +1,46 @@
+.loginWrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .loginContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        width: 600px;
+        button {
+            cursor: pointer;
+            padding: 24px 50px;
+            border-radius: 20px;
+            border: 0;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 700;
+            transition: .2s;
+            &:hover {
+                background-color: transparent;
+                color: #181D1A;
+                border: 1px solid #181D1A;
+            }
+        }
+        .blackButton {
+            background-color: #181D1A;
+            color: #FFFFFF;
+        }
+        h1 {
+            font-size: 39px;
+            font-weight: 700;
+            font-family: 'Exo 2', sans-serif;
+            color: #000000;
+        }
+        .inputContainer {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+    }
+}

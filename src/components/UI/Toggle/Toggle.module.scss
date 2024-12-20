@@ -1,0 +1,29 @@
+.toggle {
+    width: 32px;
+    height: 17px;
+    border-radius: 8.5px;
+    background-color: #B3B3B3;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    padding: 0 2px;
+
+    .circle {
+        width: 13px;
+        height: 13px;
+        background-color: #FFFFFF;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    &.checked {
+        background-color: #F61D1D;
+
+        .circle {
+            transform: translateX(15px);
+        }
+    }
+} 

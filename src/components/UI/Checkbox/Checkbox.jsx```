@@ -1,0 +1,13 @@
+import React from 'react';
+
+const Checkbox = ({ onChange, isChecked }) => {
+  return (
+    <input
+      type="checkbox"
+      onChange={onChange}
+      checked={isChecked}
+    />
+  );
+};
+
+export default Checkbox; 

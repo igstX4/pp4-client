@@ -1,0 +1,67 @@
+.content {
+    margin-top: 20px;
+    width: 100%;
+
+    .addFileDiv {
+        display: flex;
+        margin-top: 20px;
+        align-items: flex-start;
+        gap: 20px;
+        
+        .btn {
+            min-width: 200px;
+            height: 72px;
+
+            button {
+                cursor: pointer;
+                height: 98%;
+                width: 98%;
+                border-radius: 24px;
+                border: 0;
+                font-family: 'Exo 2', sans-serif;
+                font-weight: 700;
+                transition: .2s;
+                &:hover {
+                    background-color: transparent;
+                    color: #181D1A;
+                    border: 1px solid #181D1A;
+                }
+            }
+            .blackButton {
+                background-color: #181D1A;
+                color: #FFFFFF;
+            }
+        }
+    }
+
+    .descriptionArea {
+        margin-top: 20px;
+    }
+
+    .categories {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 30px;
+
+        .category {
+            cursor: pointer;
+            padding: 20px 49px;
+            border-radius: 20px;
+            background-color: #E9E9E9;
+            border: 2px solid #E9E9E9;
+            transition: .2s;
+
+            p {
+                color: #212121;
+                font-weight: 700;
+                font-size: 16px;
+                font-family: 'Exo 2', sans-serif;
+            }
+        }
+        .active {
+            background-color: #FFC6C6;
+            border: 2px solid #FF0000;
+        }
+    }
+}

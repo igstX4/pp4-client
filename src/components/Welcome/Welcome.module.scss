@@ -1,0 +1,213 @@
+.fishIcon1 {
+    position: absolute;
+    width: 700px;
+    top: 0;
+    right: -50px;
+    z-index: 1;
+    pointer-events: none;
+}
+.linesWrapper {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: -2;
+    position: absolute;
+    .lines {
+        width: 1050px;
+        display: flex;
+        margin-top: -130px;
+        justify-content: space-between;
+    }
+}
+.fishIcon2 {
+    position: absolute;
+    width: 700px;
+    height: auto;
+    pointer-events: none;
+    left: -50px;
+    top: 110px;
+    z-index: 1;
+}
+.wrapper {
+    width: 100vw;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .WelcomeTextBlock {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-top: 50px;
+        h1 {
+            margin-top: 0;
+            font-size: 75px;
+            text-align: center;
+            font-weight: 800;
+            margin-bottom: 0;
+            line-height: 67px;
+            font-family: 'Exo 2', sans-serif;
+        }
+        .topText {
+            color: #2E322E;
+        }
+        .bottomTextBlock {
+            background: linear-gradient(90.01deg, #FF0000 0.01%, #000000 90.86%);
+            height: 77px;
+            padding: 0 32px;
+            display: flex;
+            border-radius: 18px;
+            justify-content: center;
+            align-items: center;
+        }
+        .bottomText {
+            color: #FFFFFF;
+            margin-bottom: 15px;
+        }
+    }
+}
+.buttonBlock {
+    width: 1400px;
+    height: 70px;
+    margin-top: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .description {
+        font-size: 18px;
+        width: 630px;
+        color: #2E322E;
+        font-size: 16px;
+        font-weight: 500;
+        font-family: 'Arimo', sans-serif;
+        line-height: 20px;
+    }
+    .buttons {
+        display: flex;
+        gap: 10px;
+        align-items: self-start;
+        border: 0;
+        button {
+            cursor: pointer;
+            padding: 24px 50px;
+            border-radius: 20px;
+            border: 0;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 700;
+            transition: .2s;
+            &:hover {
+                background-color: transparent;
+                color: #181D1A;
+                border: 1px solid #181D1A;
+            }
+        }
+        .whiteButton {
+            background-color: #FFFFFF;
+            color: #060907;
+        }
+        .blackButton {
+            background-color: #181D1A;
+            color: #FFFFFF;
+        }
+    }
+}
+@media screen and (max-width: 1628px) {
+    .fishIcon1 {
+        // top: 10vh;
+        z-index: 0;
+        top: 15vh;
+        right: -120px;
+        width: 40vw;
+    }
+    .fishIcon2 {
+        // top: 10vh;
+        z-index: 0;
+        top: 16vh;
+        left: -120px;
+        width: 40vw;
+    }
+    .buttonBlock {
+        width: 90vw;
+    }
+}
+@media screen and (max-width: 1000px) {
+    .fishIcon1 {
+        // top: 10vh;
+
+
+        width: 547px;
+    }
+    .fishIcon2 {
+        // top: 10vh;
+        width: 548px;
+    }
+}
+@media screen and (max-width: 915px) {
+    .fishIcon1 {
+        // top: 10vh;
+
+        display: none;
+        width: 547px;
+    }
+    .fishIcon2 {
+        top: 12vh;
+        width: 450px;
+    }
+    .WelcomeTextBlock {
+        margin-top: 10px !important;
+        // font-size: 36px;
+        h1 {
+            font-size: 46px !important;
+        }
+        .bottomTextBlock {
+            height: 40px;
+        }
+    }
+    .whiteButton {
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+    }
+    .buttonBlock {
+        margin-top: 20px;
+        border: 1px solid rgb(206, 206, 206);
+        background-color: white;
+        padding: 15px;
+        gap: 10px;
+        min-height: auto;
+        height: auto;
+        border-radius: 25px;
+        margin-bottom: 40px;
+        p {
+            width: 100% !important;
+            text-align: center;
+        }
+        flex-direction: column;
+        .buttons {
+            // flex-direction: column;
+        }
+    } 
+}
+@media screen and (max-width: 450px) {
+    .WelcomeTextBlock {
+        margin-top: 10px !important;
+        // font-size: 36px;
+        h1 {
+            line-height: 36px !important;
+            font-size: 36px !important;
+        }
+        .bottomTextBlock {
+            height: 45px !important;
+        }
+    }
+}
+@media screen and (max-width: 420px) {
+    .buttons {
+        button {
+            padding: 15px 35px !important;
+        }
+        
+    }
+}

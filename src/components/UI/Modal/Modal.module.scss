@@ -1,0 +1,163 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+  
+    &.fadeIn {
+      animation: fadeIn 0.3s forwards;
+    }
+  
+    &.fadeOut {
+      animation: fadeOut 0.3s forwards;
+    }
+  }
+  
+  .modal {
+    background: #FFFFFF;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    border-radius: 16px;
+    max-height: 720px;
+    overflow-y: auto;
+    width: 970px;
+    position: relative;
+    transform: translateY(-20px);
+    opacity: 0;
+  
+    &.slideIn {
+      animation: slideIn 0.3s forwards;
+    }
+  
+    &.slideOut {
+      animation: slideOut 0.3s forwards;
+    }
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideOut {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+  }
+  .topDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .closeButton1 {
+    cursor: pointer;
+  }
+.heading {
+    color: #000000;
+    font-size: 39px;
+    font-weight: 700;
+    font-family: 'Exo 2', sans-serif;
+
+}
+.desk {
+    margin-top: 8px;
+    color: #0F132499;
+    font-size: 16px;
+    font-weight: 400;
+}
+@media screen and (max-width: 1000px) {
+  .modal {
+    position: absolute;
+    bottom: 40px;
+    width: 90vw;
+    max-width: none;
+    .content {
+      h1 {
+          font-size: 18px;
+      }
+      .desk {
+        font-size: 14px;
+      }
+  }
+  }
+}
+.buttons { 
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+
+    button {
+        cursor: pointer;
+        padding: 24px 49px;
+        border-radius: 24px;
+        border: 0;
+        font-family: 'Exo 2', sans-serif;
+        font-weight: 700;
+        transition: .2s;
+        &:hover {
+            background-color: transparent;
+            color: #181D1A;
+            border: 1px solid #181D1A;
+        }
+    }
+
+    .blackButton {
+        border: 1px solid #181D1A;
+        background-color: #181D1A;
+        color: #FFFFFF;
+    }
+
+    .grayButton {
+        border: 1px solid #C4C4C4;
+        background-color: #C4C4C4;
+        color: #FFFFFF;
+    }
+}
