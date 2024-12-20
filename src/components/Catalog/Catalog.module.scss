@@ -56,6 +56,20 @@
     .sliderContainer {
         width: 100vw;
         margin: 40px 0 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        :global {
+            .slick-slider {
+                width: 100%;
+            }
+
+            .slick-slide {
+                display: flex !important;
+                justify-content: center;
+            }
+        }
 
         @media (max-width: 1800px) {
             .slide {

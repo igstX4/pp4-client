@@ -52,7 +52,7 @@ const Slide = ({ product, setIsModalOpened }) => {
             <div className={s.bottom}>
                 <div className={s.left}>
                     <h3>Минимальная аренда</h3>
-                    <div className={s.bottomInfo}>
+                    <div style={{marginBottom: '15px'}} className={s.bottomInfo}>
                         <p className={s.first}>{firstPriceLine}</p>
                     </div>
                 </div>
@@ -74,7 +74,7 @@ const Catalog = ({ setIsModalOpened }) => {
     const [categories, setCategories] = useState([])
     const [activeCategory, setActiveCategory] = useState(null)
     const sliderRef = React.useRef(null)
-
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -105,12 +105,12 @@ const Catalog = ({ setIsModalOpened }) => {
 
     const settings = {
         className: "slider variable-width",
-        dots: true,
-        infinite: true,
+        dots: filteredProducts.length <= 8,
+        infinite: filteredProducts.length > 1,
         centerMode: true,
         slidesToShow: 1,
         slidesToScroll: 1,
-        variableWidth: true,
+        variableWidth: filteredProducts.length > 1,
         arrows: false,
         responsive: [
             {
@@ -120,7 +120,7 @@ const Catalog = ({ setIsModalOpened }) => {
                     variableWidth: false,
                     slidesToShow: 1,
                     slidesToScroll: 1,
-                    dots: true
+                    dots: filteredProducts.length <= 8
                 }
             }
         ]
@@ -153,24 +153,28 @@ const Catalog = ({ setIsModalOpened }) => {
 
                 <div className={s.sliderContainer}>
                     {filteredProducts.length > 0 ? (
-                        <Slider ref={sliderRef} {...settings}>
-                            {filteredProducts.map(product => (
-                                <Slide
-                                    key={product._id}
-                                    product={product}
-                                    setIsModalOpened={setIsModalOpened}
-                                />
-                            ))}
-                        </Slider>
+                        <>
+                            <Slider ref={sliderRef} {...settings}>
+                                {filteredProducts.map(product => (
+                                    <Slide
+                                        key={product._id}
+                                        product={product}
+                                        setIsModalOpened={setIsModalOpened}
+                                    />
+                                ))}
+                            </Slider>
+                            {filteredProducts.length > 1 && (
+                                <div className={s.navigationButtons}>
+                                    <button onClick={previous} className={s.navButton}><ArrowLeft /></button>
+                                    <button onClick={next} className={s.navButton}><ArrowRight /></button>
+                                </div>
+                            )}
+                        </>
                     ) : (
                         <div className={s.noProducts}>
                             <p>Ничего не найдено</p>
                         </div>
                     )}
-                    <div className={s.navigationButtons}>
-                        <button onClick={previous} className={s.navButton}><ArrowLeft /></button>
-                        <button onClick={next} className={s.navButton}><ArrowRight /></button>
-                    </div>
                 </div>
             </div>
         </Element>

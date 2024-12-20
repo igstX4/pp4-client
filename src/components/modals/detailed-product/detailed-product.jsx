@@ -27,6 +27,7 @@ const DetailedProductModal = ({setIsRulesModalOpened, isModalOpened, setIsModalO
         }
         fetchProduct()
     }, [isModalOpened])
+    // console.log(product.categoryName)
     const copy = async () => {
         await navigator.clipboard.writeText('Ваня Мальцевидзе Джуниор');
     }
@@ -68,7 +69,7 @@ const DetailedProductModal = ({setIsRulesModalOpened, isModalOpened, setIsModalO
                                     <div className={s.left}>
                                         <h3>Характеристики предмета:</h3>
                                         <div className={s.bottomInfo}>
-                                            <p className={s.first}>{product.name}</p>
+                                            <p className={s.first}>{product.categoryName}</p>
                                         </div>
                                     </div>
                                     <div className={s.right}>
