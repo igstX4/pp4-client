@@ -1,6 +1,6 @@
 import React from 'react'
 import s from './BecomeSupplier.module.scss'
-import fisherMan from '../../assets/bgFisher.png'
+import fisherMan from '../../assets/bgFIsher.png'
 import fishIcon from '../../assets/fishIcon.png'
 import white_line from '../../assets/white_line.png'
 import roundedText from '../../assets/roundedText.png'
