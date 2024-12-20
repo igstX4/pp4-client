@@ -30,8 +30,8 @@ const Login = () => {
       <div className={s.loginContainer}>
         <h1>Вход в Админ-панель</h1>
         <div className={s.inputContainer}>
-            <Input type="text" placeholder='user' value={login} onChange={(e) => setLogin(e.target.value)} label='Логин' />
-            <Input type="password" placeholder='****' value={password} onChange={(e) => setPassword(e.target.value)} label='Пароль' />
+            <Input type="text" placeholder='user' value={login} onChange={setLogin} label='Логин' />
+            <Input type="password" placeholder='****' value={password} onChange={setPassword} label='Пароль' />
         </div>
         <button className={s.blackButton} onClick={loginHandler}>Войти</button>
         {error && <div className={s.error}>{error}</div>}
