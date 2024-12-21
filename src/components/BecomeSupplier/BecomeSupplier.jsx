@@ -4,7 +4,7 @@ import fisherMan from '../../assets/bgFIsher.png'
 import fishIcon from '../../assets/fishIcon.png'
 import white_line from '../../assets/white_line.png'
 import roundedText from '../../assets/roundedText.png'
-import bgFisher from '../../assets/bgFisher.png'
+import bgFisher from '../../assets/bgFIsher.png'
 import { scroller } from 'react-scroll'
 
 const BecomeSupplier = () => {
