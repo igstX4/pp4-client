@@ -28,7 +28,7 @@ const Home = () => {
       <HowToGet setIsRulesModalOpened={setIsRulesModalOpened} />
       <BecomeSupplier />
       <FAQ />
-      <Footer />
+      <Footer setIsRulesModalOpened={setIsRulesModalOpened} />
     </div>
   )
 }

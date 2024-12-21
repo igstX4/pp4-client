@@ -4,6 +4,7 @@ import fisherMan from '../../assets/bgFIsher.png'
 import fishIcon from '../../assets/fishIcon.png'
 import white_line from '../../assets/white_line.png'
 import roundedText from '../../assets/roundedText.png'
+import bgFisher from '../../assets/bgFisher.png'
 import { scroller } from 'react-scroll'
 
 const BecomeSupplier = () => {
@@ -12,7 +13,8 @@ const BecomeSupplier = () => {
         <div className={s.becomeSupplierWrapper}>
             <img className={s.roundedText} src={roundedText} alt="roundedText" />
             <div className={s.becomeSupplierContainer} style={{
-                backgroundImage: `linear-gradient(95.13deg, #090707 48.22%, #931618 93.71%), url(${fisherMan})`
+                backgroundImage: `linear-gradient(95.13deg, #090707 48.22%, #931618 93.71%), url(${fisherMan})`,
+                '--bg-fisher': `url(${bgFisher})`
             }}>
                 <img className={s.fishIcon} src={fishIcon} alt='fishIcon' />
                 <div className={s.leftDiv}>

@@ -8,7 +8,7 @@ import fishIcon6 from '../../assets/fishIcon6.png'
 import { scroller, Element } from 'react-scroll'
 
 
-const Footer = () => {
+const Footer = ({setIsRulesModalOpened}) => {
     const handleClick = (to) => {
         scroller.scrollTo(to, {
             duration: 1500,
@@ -58,7 +58,7 @@ const Footer = () => {
                     <div className={s.links}>
                         <p onClick={() => handleClick('welcome')}>Главная</p>
                         <p onClick={() => handleClick('catalog')}>Ассортимент</p>
-                        <p onClick={() => handleClick('spoilers')}>Правила</p>
+                        <p onClick={() => setIsRulesModalOpened(true)}>Правила</p>
                     </div>
                 </div>
             </div>

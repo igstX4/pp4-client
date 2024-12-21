@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export const url = 'http://arendarr4.com/api';
+export const url = 'https://arendarr4.comapi';
 // export const url = 'http://localhost:5000/api'
-export const baseImageUrl = 'http://arendarr4.com'; // Базовый URL для изображений
+export const baseImageUrl = 'https://arendarr4.com'; // Базовый URL для изображений
 // export const baseImageUrl = 'http://localhost:5000'; // Базовый URL для изображений
 
 const instance = axios.create({

@@ -100,7 +100,7 @@
             right: 0;
             width: 50%;
             height: 100%;
-            background-image: url('../../assets/bgFisher.png');
+            background-image: var(--bg-fisher);
             background-position: right center;
             background-repeat: no-repeat;
             background-size: contain;
