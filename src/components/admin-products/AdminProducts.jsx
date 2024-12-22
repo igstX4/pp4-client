@@ -3,12 +3,13 @@ import CheckBox from '../UI/Checkbox/Checkbox'
 import s from './AdminProducts.module.scss'
 import Toggle from '../UI/Toggle/Toggle'
 import axios from '../../core/axios'
-import { Clock, Edit, StrangeArrow, Trash, Commission } from '../../svgs'
+import { Clock, Edit, StrangeArrow, Trash, Commission, Link } from '../../svgs'
 import DateTimePicker from '../UI/DateTimePicker/DateTimePicker'
 import AddProductModal from '../modals/add-product-modal/add-product-modal'
 import ConfirmModal from '../modals/confirm-modal/confirm-modal'
 import EditProductModal from '../modals/edit-product-modal/edit-product-modal'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import CheckUrlPopup from './CheckUrlPopup'
 
 const DraggableItem = ({ item, index, ...props }) => {
     const {
@@ -28,7 +29,11 @@ const DraggableItem = ({ item, index, ...props }) => {
         onToggleVisibility,
         onToggleCommission,
         onSetFreeDate,
-        onEdit
+        onEdit,
+        getProducts,
+        activeCheckUrlPopup,
+        setActiveCheckUrlPopup,
+        updateProduct
     } = props;
 
     const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
@@ -100,6 +105,15 @@ const DraggableItem = ({ item, index, ...props }) => {
         await onToggleCommission(_id);
     }
 
+    const handleCheckUrlSave = async (url) => {
+        try {
+            const { data } = await axios.patch(`/products/${_id}/check-url`, { checkUrl: url });
+            updateProduct(_id, data);
+        } catch (error) {
+            console.error('Ошибка при обновлении URL:', error);
+        }
+    };
+
     return (
         <Draggable draggableId={draggableId} index={index}>
             {(provided, snapshot) => (
@@ -125,6 +139,12 @@ const DraggableItem = ({ item, index, ...props }) => {
                         </div>
                     </div>
                     <div className={s.right}>
+                        <div 
+                            className={s.checkUrlIcon} 
+                            onClick={() => setActiveCheckUrlPopup(_id)}
+                        >
+                            <Link />
+                        </div>
                         <div className={s.verticalLine}></div>
                         <div className={s.date}>
                             <Clock />
@@ -171,6 +191,13 @@ const DraggableItem = ({ item, index, ...props }) => {
                         title="Удаление товара"
                         text={`Вы действительно хотите удалить товар "${name}"?`}
                     />
+                    {activeCheckUrlPopup === _id && (
+                        <CheckUrlPopup
+                            checkUrl={item.checkUrl}
+                            onSave={handleCheckUrlSave}
+                            onClose={() => setActiveCheckUrlPopup(null)}
+                        />
+                    )}
                 </div>
             )}
         </Draggable>
@@ -186,21 +213,49 @@ export const AdminProducts = () => {
     const [editingProduct, setEditingProduct] = useState(null)
     const [isEditModalOpened, setIsEditModalOpened] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
+    const [activeCheckUrlPopup, setActiveCheckUrlPopup] = useState(null);
+    const [initialLoading, setInitialLoading] = useState(true);
 
-    const getProducts = async () => {
+    const getProducts = async (isInitial = false) => {
         try {
-            setIsLoading(true);
+            if (isInitial) {
+                setIsLoading(true);
+            }
+            
             const { data } = await axios.get('/products');
-            // Проверяем наличие _id и добавляем временные id если их нет
             const validProducts = data.map((product, index) => ({
                 ...product,
                 _id: product._id || `temp-${index}`
             }));
-            setProducts(validProducts);
+            
+            if (isInitial || products.length === 0) {
+                setProducts(validProducts);
+            } else {
+                setProducts(prevProducts => {
+                    const updatedProducts = [...prevProducts];
+                    validProducts.forEach(newProduct => {
+                        const index = updatedProducts.findIndex(p => p._id === newProduct._id);
+                        if (index !== -1) {
+                            updatedProducts[index] = {
+                                ...updatedProducts[index],
+                                ...newProduct
+                            };
+                        } else {
+                            updatedProducts.push(newProduct);
+                        }
+                    });
+                    
+                    return updatedProducts.filter(product => 
+                        validProducts.some(newProduct => newProduct._id === product._id)
+                    );
+                });
+            }
         } catch (error) {
             console.error('Ошибка при загрузке продуктов:', error);
         } finally {
-            setIsLoading(false);
+            if (isInitial) {
+                setIsLoading(false);
+            }
         }
     };
 
@@ -211,8 +266,8 @@ export const AdminProducts = () => {
 
     const deleteProduct = async (id) => {
         try {
-            await axios.delete(`/products/${id}`)
-            await getProducts()
+            await axios.delete(`/products/${id}`);
+            await getProducts(false);
         } catch (error) {
             throw error;
         }
@@ -220,10 +275,10 @@ export const AdminProducts = () => {
 
     const deleteSelectedProducts = async () => {
         try {
-            await Promise.all(chosenIds.map(id => axios.delete(`/products/${id}`)))
-            setChosenIds([])
-            await getProducts()
-            setIsDeleteModalOpened(false)
+            await Promise.all(chosenIds.map(id => axios.delete(`/products/${id}`)));
+            setChosenIds([]);
+            await getProducts(false);
+            setIsDeleteModalOpened(false);
         } catch (error) {
             alert('Ошибка при удалении товаров');
             setIsDeleteModalOpened(false);
@@ -283,15 +338,25 @@ export const AdminProducts = () => {
             
             await axios.patch('/products/reorder', { orders });
         } catch (error) {
-            console.error('Ошибка при обновлении порядка:', error);
+            console.error('Ошибка при обновлении пор��дка:', error);
             getProducts();
         }
     };
 
+    const updateProduct = (productId, newData) => {
+        setProducts(prevProducts => 
+            prevProducts.map(product => 
+                product._id === productId 
+                    ? { ...product, ...newData }
+                    : product
+            )
+        );
+    };
+
     useEffect(() => {
-        getProducts()
-        getCategories()
-    }, [])
+        getProducts(true);
+        getCategories();
+    }, []);
 
     return (
         <div className={s.adminProductsWrapper}>
@@ -317,7 +382,7 @@ export const AdminProducts = () => {
                     </span></p>
                     {chosenIds.length > 0 && (
                         <p className={s.link} onClick={() => setIsDeleteModalOpened(true)}>
-                            Удалить выделенные товары <span className={s.chosen}>(Выбрано {chosenIds.length})</span>
+                            Удалить выдел��нные товары <span className={s.chosen}>(Выбрано {chosenIds.length})</span>
                         </p>
                     )}
                 </div>
@@ -347,6 +412,10 @@ export const AdminProducts = () => {
                                         onToggleCommission={toggleCommission}
                                         onSetFreeDate={setFreeDate}
                                         onEdit={handleEdit}
+                                        getProducts={getProducts}
+                                        updateProduct={updateProduct}
+                                        activeCheckUrlPopup={activeCheckUrlPopup}
+                                        setActiveCheckUrlPopup={setActiveCheckUrlPopup}
                                     />
                                 ))}
                                 {provided.placeholder}

@@ -6,6 +6,8 @@ import "slick-carousel/slick/slick-theme.css"
 import { Arrow, ArrowLeft, ArrowRight } from '../../svgs'
 import axios from '../../core/axios'
 import { Element } from 'react-scroll'
+import { Link, animateScroll as scroll, scroller } from "react-scroll"
+
 import { baseImageUrl } from '../../core/axios'
 
 const Slide = ({ product, setIsModalOpened }) => {
@@ -19,7 +21,15 @@ const Slide = ({ product, setIsModalOpened }) => {
     const handleMouseMove = () => {
         setIsDragging(true);
     };
-
+    const handleClickScroll = (to) => {
+        scroller.scrollTo(to, {
+            duration: 1500,
+            delay: 100,
+            smooth: true,
+            offset: -100,
+        });
+      }
+    
     const handleClick = () => {
         if (!isDragging) {
             setIsModalOpened(product._id);
@@ -73,7 +83,9 @@ const Catalog = ({ setIsModalOpened }) => {
     const [products, setProducts] = useState([])
     const [categories, setCategories] = useState([])
     const [activeCategory, setActiveCategory] = useState(null)
-    const sliderRef = React.useRef(null)
+    const [showAll, setShowAll] = useState(false)
+    const scrollContainerRef = React.useRef(null)
+    const catalogRef = React.useRef(null)
     
     useEffect(() => {
         const fetchData = async () => {
@@ -91,84 +103,113 @@ const Catalog = ({ setIsModalOpened }) => {
         fetchData()
     }, [])
 
+    const handleWheel = (e) => {
+        if (!showAll && scrollContainerRef.current) {
+            const container = scrollContainerRef.current;
+            const isScrollable = container.scrollWidth > container.clientWidth;
+            
+            if (isScrollable) {
+                e.preventDefault();
+                const scrollSpeed = 1.5;
+                const delta = e.deltaY * scrollSpeed;
+                
+                container.scrollTo({
+                    left: container.scrollLeft + delta,
+                    behavior: 'smooth'
+                });
+            }
+        }
+    };
+
+    useEffect(() => {
+        const container = scrollContainerRef.current;
+        if (container) {
+            container.addEventListener('wheel', handleWheel, { passive: false });
+            return () => container.removeEventListener('wheel', handleWheel);
+        }
+    }, [showAll]);
+
+    useEffect(() => {
+        if (scrollContainerRef.current && !showAll) {
+            const scrollContainer = scrollContainerRef.current;
+            const centerPosition = (scrollContainer.scrollWidth - scrollContainer.clientWidth) / 2;
+            scrollContainer.scrollLeft = centerPosition;
+        }
+    }, [products, activeCategory, showAll]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (scrollContainerRef.current && !showAll) {
+                const scrollContainer = scrollContainerRef.current;
+                const centerPosition = (scrollContainer.scrollWidth - scrollContainer.clientWidth) / 2;
+                scrollContainer.scrollLeft = centerPosition;
+            }
+        }, 100);
+
+        return () => clearTimeout(timer);
+    }, []);
+
     const filteredProducts = activeCategory
         ? products.filter(product => product.category?._id === activeCategory && product.isVisible)
         : products.filter(product => product.isVisible)
 
-    const next = () => {
-        sliderRef.current.slickNext()
-    }
+    const handleClickScrollToButton = () => {
+        scroller.scrollTo('showAllButton', {
+            duration: 1500,
+            smooth: true,
+            offset: -250
+        });
+    };
 
-    const previous = () => {
-        sliderRef.current.slickPrev()
-    }
-
-    const settings = {
-        className: "slider variable-width",
-        dots: filteredProducts.length <= 8,
-        infinite: filteredProducts.length > 1,
-        centerMode: true,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        variableWidth: filteredProducts.length > 1,
-        arrows: false,
-        responsive: [
-            {
-                breakpoint: 500,
-                settings: {
-                    centerMode: false,
-                    variableWidth: false,
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    dots: filteredProducts.length <= 8
-                }
-            }
-        ]
-    }
+    const handleClickScrollToTop = () => {
+        scroller.scrollTo('catalogTop', {
+            duration: 1500,
+            smooth: true,
+            offset: 100
+        });
+    };
 
     return (
         <Element name='catalog'>
-            <div className={s.Catalog}>
-                <div className={s.heading}>
-                    <h2>Асортимент</h2>
-                    <h1>Каждый найдет снасть для себя!</h1>
-                    <div className={`${s.categoryChoose}`}>
-                        <div
-                            className={`${s.categoryChooseItem} ${!activeCategory ? s.categoryChooseItem_active : ''}`}
-                            onClick={() => setActiveCategory(null)}
-                        >
-                            <p>Все</p>
-                        </div>
-                        {categories.map(category => (
+            <div className={s.Catalog} ref={catalogRef}>
+                <Element name='catalogTop'>
+                    <div className={s.heading}>
+                        <h2>Асортимент</h2>
+                        <h1>Каждый найдет снасть для себя!</h1>
+                        <div className={`${s.categoryChoose}`}>
                             <div
-                                key={category._id}
-                                className={`${s.categoryChooseItem} ${activeCategory === category._id ? s.categoryChooseItem_active : ''}`}
-                                onClick={() => setActiveCategory(category._id)}
+                                className={`${s.categoryChooseItem} ${!activeCategory ? s.categoryChooseItem_active : ''}`}
+                                onClick={() => setActiveCategory(null)}
                             >
-                                <p>{category.name}</p>
+                                <p>Все</p>
                             </div>
-                        ))}
+                            {categories.map(category => (
+                                <div
+                                    key={category._id}
+                                    className={`${s.categoryChooseItem} ${activeCategory === category._id ? s.categoryChooseItem_active : ''}`}
+                                    onClick={() => setActiveCategory(category._id)}
+                                >
+                                    <p>{category.name}</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                </Element>
 
-                <div className={s.sliderContainer}>
+                <div 
+                    className={`${s.productsContainer} ${showAll ? s.showAll : ''}`} 
+                    ref={scrollContainerRef}
+                    onWheel={handleWheel}
+                >
                     {filteredProducts.length > 0 ? (
                         <>
-                            <Slider ref={sliderRef} {...settings}>
-                                {filteredProducts.map(product => (
-                                    <Slide
-                                        key={product._id}
-                                        product={product}
-                                        setIsModalOpened={setIsModalOpened}
-                                    />
-                                ))}
-                            </Slider>
-                            {filteredProducts.length > 1 && (
-                                <div className={s.navigationButtons}>
-                                    <button onClick={previous} className={s.navButton}><ArrowLeft /></button>
-                                    <button onClick={next} className={s.navButton}><ArrowRight /></button>
-                                </div>
-                            )}
+                            {filteredProducts.map(product => (
+                                <Slide
+                                    key={product._id}
+                                    product={product}
+                                    setIsModalOpened={setIsModalOpened}
+                                />
+                            ))}
                         </>
                     ) : (
                         <div className={s.noProducts}>
@@ -176,6 +217,29 @@ const Catalog = ({ setIsModalOpened }) => {
                         </div>
                     )}
                 </div>
+                
+                <Element name='showAllButton'>
+                    <button 
+                        className={s.showAllButton} 
+                        onClick={() => {
+                            if (showAll) {
+                                setTimeout(handleClickScrollToTop, 100);
+                            }
+                            setShowAll(!showAll);
+                        }}
+                    >
+                        {showAll ? 'Скрыть' : 'Показать все'}
+                    </button>
+                </Element>
+
+                {showAll && (
+                    <button 
+                        className={s.scrollTopButton}
+                        onClick={handleClickScrollToButton}
+                    >
+                        <ArrowRight />
+                    </button>
+                )}
             </div>
         </Element>
     )
