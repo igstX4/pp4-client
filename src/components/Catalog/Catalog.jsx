@@ -110,7 +110,7 @@ const Catalog = ({ setIsModalOpened }) => {
             
             if (isScrollable) {
                 e.preventDefault();
-                const scrollSpeed = 3;
+                const scrollSpeed = 6;
                 const delta = e.deltaY * scrollSpeed;
                 
                 container.scrollTo({
