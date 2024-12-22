@@ -43,7 +43,7 @@ const HowToGet = ({ setIsRulesModalOpened }) => {
                             <p>Уточнить интересующий предмет и наличие 📃</p>
                         </div>
                         <div className={`${s.info_block} ${s.info_block_3}`}>
-                            <p>Оплатить срок аренды 📅</p>
+                            <p>Оплатить срок теста 📅</p>
                         </div>
                         <div className={`${s.info_block} ${s.info_block_4}`}>
                             <p>Получить предмет и наслаждаться ✅</p>
@@ -58,7 +58,7 @@ const HowToGet = ({ setIsRulesModalOpened }) => {
                         <div className={s.link}>
                             <AttentionIcon />
                             <div onClick={() => setIsRulesModalOpened(true)}>
-                                <h6>Правила аренды</h6>
+                                <h6>Правила теста</h6>
                                 <p>Ознакомиться с правилами!</p>
                             </div>
                         </div>

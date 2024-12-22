@@ -41,7 +41,7 @@ const Info = () => {
                     <div className={s.title_div}>
                         <img className={s.first_line} src={vertical_line} alt="vertical_line" />
                         <h1>Огромный выбор снастей разного
-                            качества и длительный <span className={s.span1}>срок <img className={s.second_line} src={vertical_line} alt="vertical_line" />
+                            качества и на длительный <span className={s.span1}>срок <img className={s.second_line} src={vertical_line} alt="vertical_line" />
                             </span>  </h1>
                     </div>
                     <p className={s.description}>Если вы хотите сдавать свои снасти на Тест и зарабатывать золотые монеты РР4, но у Вас нет времени или желания,
