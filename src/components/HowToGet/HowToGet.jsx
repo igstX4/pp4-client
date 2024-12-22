@@ -50,7 +50,7 @@ const HowToGet = ({ setIsRulesModalOpened }) => {
                         </div>
                     </div>
                     <div className={s.btns}>
-                        <button onClick={() => window.open('https://t.me/cyberbit')} className={s.tgBtn}><TgIcon /> Связаться с нами</button>
+                        {/* <button onClick={() => window.open('https://t.me/cyberbit')} className={s.tgBtn}><TgIcon /> Связаться с нами</button> */}
                         <button onClick={copy} className={s.copyBtn}><CopyIcon /> Скопировать имя PP4</button>
                     </div>
                     <div className={s.horizontal_line}></div>

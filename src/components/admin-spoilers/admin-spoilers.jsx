@@ -3,6 +3,7 @@ import s from './admin-spoilers.module.scss'
 import { Edit, Trash } from '../../svgs'
 import CheckBox from '../UI/Checkbox/Checkbox'
 import AddSpoilerModal from '../modals/add-spoiler-modal/add-spoiler-modal'
+import EditRulesModal from '../modals/edit-rules-modal/edit-rules-modal'
 import axios from '../../core/axios'
 
 const Item = ({ question, _id, setChosenIds, chosenIds, onEdit, onDelete }) => {
@@ -40,6 +41,7 @@ export const AdminSpoilers = () => {
     const [spoilers, setSpoilers] = useState([])
     const [chosenIds, setChosenIds] = useState([])
     const [isModalOpened, setIsModalOpened] = useState(false)
+    const [isRulesModalOpened, setIsRulesModalOpened] = useState(false)
     const [editingSpoiler, setEditingSpoiler] = useState(null)
 
     const fetchSpoilers = async () => {
@@ -93,6 +95,10 @@ export const AdminSpoilers = () => {
                 setEditingSpoiler={setEditingSpoiler}
                 onSuccess={fetchSpoilers}
             />
+            <EditRulesModal
+                isModalOpened={isRulesModalOpened}
+                setIsModalOpened={setIsRulesModalOpened}
+            />
             <h1 className={s.title}>Спойлеры</h1>
             <div className={s.topControls}>
                 <div className={s.info}>
@@ -103,12 +109,17 @@ export const AdminSpoilers = () => {
                         </p>
                     )}
                 </div>
-                <button onClick={() => {
-                    setEditingSpoiler(null)
-                    setIsModalOpened(true)
-                }} className={s.blackButton}>
-                    Добавить спойлер
-                </button>
+                <div className={s.buttons}>
+                    <button onClick={() => setIsRulesModalOpened(true)} className={s.whiteButton}>
+                        Редактировать правила
+                    </button>
+                    <button onClick={() => {
+                        setEditingSpoiler(null)
+                        setIsModalOpened(true)
+                    }} className={s.blackButton}>
+                        Добавить спойлер
+                    </button>
+                </div>
             </div>
             <div className={s.items}>
                 {spoilers.map(spoiler => (

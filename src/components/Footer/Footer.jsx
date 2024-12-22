@@ -31,11 +31,11 @@ const Footer = ({setIsRulesModalOpened}) => {
                     <div className={s.blocks}>
                         <div className={s.block}>
                             <h5>Поддержка</h5>
-                            <p>@cyberbit</p>
+                            <p>@yuliyamalcevidzerf4</p>
                         </div>
                         <div className={s.block}>
                             <h5>Почта:</h5>
-                            <p>srs@example.ru</p>
+                            <p>santexlider@bk.ru</p>
                         </div>
 
                         <div onClick={() => window.open('https://www.youtube.com/@malcev007')} className={s.block}>

@@ -82,10 +82,10 @@ const DetailedProductModal = ({setIsRulesModalOpened, isModalOpened, setIsModalO
                                 </div>
                             </div>
                             <div className={s.info}>
-                                <div className={s.infoItem}>
+                                {/* <div className={s.infoItem}>
                                     <h3>Арендатор</h3>
                                     <p className={s.desk}>Мальцевдизе</p>
-                                </div>
+                                </div> */}
                                 <div className={s.infoItem}>
                                     <h3>Статус предмета</h3>
                                     <div className={s.status}>
@@ -116,7 +116,7 @@ const DetailedProductModal = ({setIsRulesModalOpened, isModalOpened, setIsModalO
                         <div className={s.rightDiv}>
                             <h2 className={s.desktopTitle}>{product.name}</h2>
                             <h2 className={s.mobileTitle}>{product.name}</h2>
-                            <h3>Цена Аренды = Теста (время реальное):</h3>
+                            <h3>Цена Теста (время реальное):</h3>
                             <div className={s.prices}>
                                 <p>{product.price}</p>
                             </div>

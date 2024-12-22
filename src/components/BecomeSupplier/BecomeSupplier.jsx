@@ -25,7 +25,7 @@ const BecomeSupplier = () => {
                     </div>
                 </div>
                 <div className={s.rightDiv}>
-                    <button onClick={() => window.open('https://t.me/cyberbit')} className={s.blackButton}>Связаться</button>
+                    <button onClick={() => window.open('https://t.me/YuliyaMalcevidzeRF4')} className={s.blackButton}>Связаться</button>
                 </div>
             </div>
         </div>

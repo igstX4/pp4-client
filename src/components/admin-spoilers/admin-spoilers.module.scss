@@ -130,6 +130,42 @@
             }
         }
     }
+    .buttons {
+        display: flex;
+        gap: 15px;
+        
+        button {
+            cursor: pointer;
+            padding: 24px 50px;
+            border-radius: 20px;
+            border: 0;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 700;
+            transition: .2s;
+            
+            &:hover {
+                background-color: transparent;
+                color: #181D1A;
+                border: 1px solid #181D1A;
+            }
+        }
+        
+        .blackButton {
+            background-color: #181D1A;
+            color: #FFFFFF;
+        }
+        
+        .whiteButton {
+            background-color: #FFFFFF;
+            color: #181D1A;
+            border: 1px solid #181D1A;
+            
+            &:hover {
+                background-color: #181D1A;
+                color: #FFFFFF;
+            }
+        }
+    }
 }
 
 .imgWrapper {

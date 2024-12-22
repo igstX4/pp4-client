@@ -16,7 +16,7 @@ const Header = ({ setIsRulesModalOpened }) => {
 
   return (
     <div className={s.header}>
-      <div className={s.header__logo}>
+      <div onClick={() => window.location.reload()} className={s.header__logo}>
         <img src={logo} alt='logo'/>
         <p>Мальцевидзе</p>
       </div>

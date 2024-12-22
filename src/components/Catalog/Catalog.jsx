@@ -51,7 +51,7 @@ const Slide = ({ product, setIsModalOpened }) => {
             </div>
             <div className={s.bottom}>
                 <div className={s.left}>
-                    <h3>Минимальная аренда</h3>
+                    <h3>Минимальная срок теста</h3>
                     <div style={{marginBottom: '15px'}} className={s.bottomInfo}>
                         <p className={s.first}>{firstPriceLine}</p>
                     </div>

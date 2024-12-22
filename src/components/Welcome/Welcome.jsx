@@ -33,7 +33,7 @@ const Welcome = () => {
                         </div>
                     </div>
                     <div className={s.WelcomeTextBlock}>
-                        <h1 className={s.topText}>Аренда Снастей от</h1>
+                        <h1 className={s.topText}>Тест Снастей от</h1>
                         <div className={s.bottomTextBlock}><h1 className={s.bottomText}>Мальцевидзе</h1></div>
                     </div>
                     <div className={s.buttonBlock}>
