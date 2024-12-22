@@ -61,7 +61,7 @@ const Slide = ({ product, setIsModalOpened }) => {
             </div>
             <div className={s.bottom}>
                 <div className={s.left}>
-                    <h3>Минимальная срок теста</h3>
+                    <h3>Минимальный срок теста</h3>
                     <div style={{marginBottom: '15px'}} className={s.bottomInfo}>
                         <p className={s.first}>{firstPriceLine}</p>
                     </div>
@@ -87,6 +87,10 @@ const Catalog = ({ setIsModalOpened }) => {
     const scrollContainerRef = React.useRef(null)
     const catalogRef = React.useRef(null)
     
+    const filteredProducts = activeCategory
+        ? products.filter(product => product.category?._id === activeCategory && product.isVisible)
+        : products.filter(product => product.isVisible);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -131,27 +135,24 @@ const Catalog = ({ setIsModalOpened }) => {
 
     useEffect(() => {
         if (scrollContainerRef.current && !showAll) {
-            const scrollContainer = scrollContainerRef.current;
-            const centerPosition = (scrollContainer.scrollWidth - scrollContainer.clientWidth) / 2;
-            scrollContainer.scrollLeft = centerPosition;
-        }
-    }, [products, activeCategory, showAll]);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (scrollContainerRef.current && !showAll) {
-                const scrollContainer = scrollContainerRef.current;
-                const centerPosition = (scrollContainer.scrollWidth - scrollContainer.clientWidth) / 2;
-                scrollContainer.scrollLeft = centerPosition;
+            const container = scrollContainerRef.current;
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile && filteredProducts.length > 0) {
+                const containerWidth = container.clientWidth;
+                const slideWidth = container.children[0]?.offsetWidth || 0;
+                const middleIndex = Math.floor(filteredProducts.length / 2);
+                
+                const offset = slideWidth * 0.2;
+                const scrollPosition = (slideWidth * middleIndex) + (slideWidth / 2) - (containerWidth / 2) - offset;
+                
+                container.scrollLeft = scrollPosition;
+            } else {
+                const centerPosition = (container.scrollWidth - container.clientWidth) / 2;
+                container.scrollLeft = centerPosition;
             }
-        }, 100);
-
-        return () => clearTimeout(timer);
-    }, []);
-
-    const filteredProducts = activeCategory
-        ? products.filter(product => product.category?._id === activeCategory && product.isVisible)
-        : products.filter(product => product.isVisible)
+        }
+    }, [products, activeCategory, showAll, filteredProducts]);
 
     const handleClickScrollToButton = () => {
         scroller.scrollTo('showAllButton', {
