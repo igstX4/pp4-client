@@ -9,6 +9,7 @@ import AddProductModal from '../modals/add-product-modal/add-product-modal'
 import AddCategoryModal from '../modals/add-category-modal/add-category-modal'
 import ConfirmModal from '../modals/confirm-modal/confirm-modal'
 import EditCategoryModal from '../modals/edit-category-modal/edit-category-modal'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 const data = [
     {
@@ -29,9 +30,19 @@ const data = [
     }
 ]
 
-const Item = ({ name, _id, setChosenIds, chosenIds, onDelete, onEdit }) => {
+const DraggableItem = ({ item, index, ...props }) => {
+    const {
+        _id,
+        name,
+        setChosenIds,
+        chosenIds,
+        onDelete,
+        onEdit
+    } = props;
+
     const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
     const isGeneralCategory = name === 'Общая категория';
+    const draggableId = React.useMemo(() => `category-${_id}`, [_id]);
 
     const handleCheckbox = () => {
         if (isGeneralCategory) return;
@@ -42,51 +53,48 @@ const Item = ({ name, _id, setChosenIds, chosenIds, onDelete, onEdit }) => {
         }
     }
 
-    const handleDelete = async () => {
-        try {
-            await onDelete(_id);
-            setIsDeleteModalOpened(false);
-        } catch (error) {
-            alert(error.response?.data?.message || 'Ошибка при удалении категории');
-            setIsDeleteModalOpened(false);
-        }
-    }
-
     return (
-        <>
-            <div className={s.item}>
-                <div className={s.left}>
-                    <div className={s.checkbox}>
-                        <CheckBox
-                            isChecked={chosenIds.includes(_id)}
-                            onChange={handleCheckbox}
-                            disabled={isGeneralCategory}
-                        />
+        <Draggable draggableId={draggableId} index={index} isDragDisabled={isGeneralCategory}>
+            {(provided, snapshot) => (
+                <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    className={`${s.item} ${snapshot.isDragging ? s.isDragging : ''}`}
+                >
+                    <div className={s.left}>
+                        <div className={s.checkbox}>
+                            <CheckBox
+                                isChecked={chosenIds.includes(_id)}
+                                onChange={handleCheckbox}
+                                disabled={isGeneralCategory}
+                            />
+                        </div>
+                        <div className={s.info}>
+                            <p className={s.name}>{name}</p>
+                        </div>
                     </div>
-                    <div className={s.info}>
-                        <p className={s.name}>{name}</p>
+                    <div className={s.right}>
+                        {!isGeneralCategory && (
+                            <>
+                                <div className={s.edit} onClick={() => onEdit({ _id, name })}><Edit /></div>
+                                <div className={s.verticalLine2}></div>
+                                <div className={s.trash} onClick={() => setIsDeleteModalOpened(true)}><Trash /></div>
+                            </>
+                        )}
                     </div>
+                    <ConfirmModal 
+                        isModalOpened={isDeleteModalOpened}
+                        setIsModalOpened={setIsDeleteModalOpened}
+                        onConfirm={() => onDelete(_id)}
+                        title="Удаление категории"
+                        text={`Вы действительно хотите удалить категорию "${name}"?`}
+                    />
                 </div>
-                <div className={s.right}>
-                    {!isGeneralCategory && (
-                        <>
-                            <div className={s.edit} onClick={() => onEdit({ _id, name })}><Edit /></div>
-                            <div className={s.verticalLine2}></div>
-                            <div className={s.trash} onClick={() => setIsDeleteModalOpened(true)}><Trash /></div>
-                        </>
-                    )}
-                </div>
-            </div>
-            <ConfirmModal 
-                isModalOpened={isDeleteModalOpened}
-                setIsModalOpened={setIsDeleteModalOpened}
-                onConfirm={handleDelete}
-                title="Удаление категории"
-                text={`Вы действительно хотите удалить категорию "${name}"?`}
-            />
-        </>
-    )
-}
+            )}
+        </Draggable>
+    );
+};
 
 export const AdminCategories = () => {
     const [chosenIds, setChosenIds] = useState([])
@@ -95,11 +103,23 @@ export const AdminCategories = () => {
     const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false)
     const [categories, setCategories] = useState([])
     const [editingCategory, setEditingCategory] = useState(null)
+    const [isLoading, setIsLoading] = useState(true);
 
     const getCategories = async () => {
-        const {data} = await axios.get('/categories')
-        setCategories(data)
-    }
+        try {
+            setIsLoading(true);
+            const { data } = await axios.get('/categories');
+            const validCategories = data.map((category, index) => ({
+                ...category,
+                _id: category._id || `temp-${index}`
+            }));
+            setCategories(validCategories);
+        } catch (error) {
+            console.error('Ошибка при загрузке категорий:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleEdit = (category) => {
         setEditingCategory(category)
@@ -126,6 +146,28 @@ export const AdminCategories = () => {
             setIsDeleteModalOpened(false);
         }
     }
+
+    const onDragEnd = async (result) => {
+        if (!result.destination) return;
+
+        try {
+            const items = Array.from(categories);
+            const [reorderedItem] = items.splice(result.source.index, 1);
+            items.splice(result.destination.index, 0, reorderedItem);
+
+            setCategories(items);
+
+            const orders = items.map((item, index) => ({
+                id: item._id,
+                order: index
+            }));
+            
+            await axios.patch('/categories/reorder', { orders });
+        } catch (error) {
+            console.error('Ошибка при обновлении порядка:', error);
+            getCategories();
+        }
+    };
 
     useEffect(() => {
         getCategories()
@@ -165,18 +207,37 @@ export const AdminCategories = () => {
                     Добавить категорию
                 </button>
             </div>
-            <div className={s.items}>
-                {categories && categories.map(item => (
-                    <Item
-                        key={item._id}
-                        {...item}
-                        chosenIds={chosenIds}
-                        setChosenIds={setChosenIds}
-                        onDelete={deleteCategory}
-                        onEdit={handleEdit}
-                    />
-                ))}
-            </div>
+            <DragDropContext onDragEnd={onDragEnd}>
+                {!isLoading && (
+                    <Droppable droppableId="categories">
+                        {(provided, snapshot) => (
+                            <div
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                                className={`${s.items} ${snapshot.isDraggingOver ? s.isDraggingOver : ''}`}
+                            >
+                                {categories.map((item, index) => (
+                                    <DraggableItem
+                                        key={item._id}
+                                        item={item}
+                                        index={index}
+                                        {...item}
+                                        chosenIds={chosenIds}
+                                        setChosenIds={setChosenIds}
+                                        onDelete={deleteCategory}
+                                        onEdit={handleEdit}
+                                    />
+                                ))}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                )}
+            </DragDropContext>
+
+            {isLoading && (
+                <div className={s.loading}>Загрузка...</div>
+            )}
         </div>
     )
 }

@@ -4,9 +4,23 @@ import { Edit, Trash } from '../../svgs'
 import CheckBox from '../UI/Checkbox/Checkbox'
 import AddSpoilerModal from '../modals/add-spoiler-modal/add-spoiler-modal'
 import EditRulesModal from '../modals/edit-rules-modal/edit-rules-modal'
+import ConfirmModal from '../modals/confirm-modal/confirm-modal'
 import axios from '../../core/axios'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
-const Item = ({ question, _id, setChosenIds, chosenIds, onEdit, onDelete }) => {
+const DraggableItem = ({ item, index, ...props }) => {
+    const {
+        _id,
+        question,
+        setChosenIds,
+        chosenIds,
+        onEdit,
+        onDelete
+    } = props;
+
+    const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
+    const draggableId = React.useMemo(() => `spoiler-${_id}`, [_id]);
+
     const handleCheckbox = () => {
         if (chosenIds.includes(_id)) {
             setChosenIds(prev => prev.filter(id => id !== _id))
@@ -16,26 +30,42 @@ const Item = ({ question, _id, setChosenIds, chosenIds, onEdit, onDelete }) => {
     }
 
     return (
-        <div className={s.item}>
-            <div className={s.left}>
-                <div className={s.checkbox}>
-                    <CheckBox
-                        isChecked={chosenIds.includes(_id)}
-                        onChange={handleCheckbox}
+        <Draggable draggableId={draggableId} index={index}>
+            {(provided, snapshot) => (
+                <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    className={`${s.item} ${snapshot.isDragging ? s.isDragging : ''}`}
+                >
+                    <div className={s.left}>
+                        <div className={s.checkbox}>
+                            <CheckBox
+                                isChecked={chosenIds.includes(_id)}
+                                onChange={handleCheckbox}
+                            />
+                        </div>
+                        <div className={s.info}>
+                            <p className={s.name}>{question}</p>
+                        </div>
+                    </div>
+                    <div className={s.right}>
+                        <div className={s.edit} onClick={() => onEdit(_id)}><Edit /></div>
+                        <div className={s.verticalLine2}></div>
+                        <div className={s.trash} onClick={() => setIsDeleteModalOpened(true)}><Trash /></div>
+                    </div>
+                    <ConfirmModal 
+                        isModalOpened={isDeleteModalOpened}
+                        setIsModalOpened={setIsDeleteModalOpened}
+                        onConfirm={() => onDelete(_id)}
+                        title="Удаление спойлера"
+                        text={`Вы действительно хотите удалить этот спойлер?`}
                     />
                 </div>
-                <div className={s.info}>
-                    <p className={s.name}>{question}</p>
-                </div>
-            </div>
-            <div className={s.right}>
-                <div className={s.edit} onClick={() => onEdit(_id)}><Edit /></div>
-                <div className={s.verticalLine2}></div>
-                <div className={s.trash} onClick={() => onDelete(_id)}><Trash /></div>
-            </div>
-        </div>
-    )
-}
+            )}
+        </Draggable>
+    );
+};
 
 export const AdminSpoilers = () => {
     const [spoilers, setSpoilers] = useState([])
@@ -43,19 +73,23 @@ export const AdminSpoilers = () => {
     const [isModalOpened, setIsModalOpened] = useState(false)
     const [isRulesModalOpened, setIsRulesModalOpened] = useState(false)
     const [editingSpoiler, setEditingSpoiler] = useState(null)
+    const [isLoading, setIsLoading] = useState(true)
 
     const fetchSpoilers = async () => {
         try {
-            const response = await axios.get('/spoilers')
-            setSpoilers(response.data)
+            setIsLoading(true);
+            const response = await axios.get('/spoilers');
+            const validSpoilers = response.data.map((spoiler, index) => ({
+                ...spoiler,
+                _id: spoiler._id || `temp-${index}`
+            }));
+            setSpoilers(validSpoilers);
         } catch (error) {
-            console.error('Ошибка при загрузке спойлеров:', error)
+            console.error('Ошибка при загрузке спойлеров:', error);
+        } finally {
+            setIsLoading(false);
         }
     }
-
-    useEffect(() => {
-        fetchSpoilers()
-    }, [])
 
     const handleEdit = async (id) => {
         const spoiler = spoilers.find(s => s._id === id)
@@ -64,13 +98,11 @@ export const AdminSpoilers = () => {
     }
 
     const handleDelete = async (id) => {
-        if (window.confirm('Вы уверены, что хотите удалить этот спойлер?')) {
-            try {
-                await axios.delete(`/spoilers/${id}`)
-                fetchSpoilers()
-            } catch (error) {
-                console.error('Ошибка при удалении спойлера:', error)
-            }
+        try {
+            await axios.delete(`/spoilers/${id}`)
+            fetchSpoilers()
+        } catch (error) {
+            console.error('Ошибка при удалении спойлера:', error)
         }
     }
 
@@ -85,6 +117,32 @@ export const AdminSpoilers = () => {
             }
         }
     }
+
+    const onDragEnd = async (result) => {
+        if (!result.destination) return;
+
+        try {
+            const items = Array.from(spoilers);
+            const [reorderedItem] = items.splice(result.source.index, 1);
+            items.splice(result.destination.index, 0, reorderedItem);
+
+            setSpoilers(items);
+
+            const orders = items.map((item, index) => ({
+                id: item._id,
+                order: index
+            }));
+            
+            await axios.patch('/spoilers/reorder', { orders });
+        } catch (error) {
+            console.error('Ошибка при обновлении порядка:', error);
+            fetchSpoilers();
+        }
+    };
+
+    useEffect(() => {
+        fetchSpoilers()
+    }, [])
 
     return (
         <div className={s.adminProductsWrapper}>
@@ -121,18 +179,37 @@ export const AdminSpoilers = () => {
                     </button>
                 </div>
             </div>
-            <div className={s.items}>
-                {spoilers.map(spoiler => (
-                    <Item
-                        key={spoiler._id}
-                        {...spoiler}
-                        chosenIds={chosenIds}
-                        setChosenIds={setChosenIds}
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
-                    />
-                ))}
-            </div>
+            <DragDropContext onDragEnd={onDragEnd}>
+                {!isLoading && (
+                    <Droppable droppableId="spoilers">
+                        {(provided, snapshot) => (
+                            <div
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                                className={`${s.items} ${snapshot.isDraggingOver ? s.isDraggingOver : ''}`}
+                            >
+                                {spoilers.map((item, index) => (
+                                    <DraggableItem
+                                        key={item._id}
+                                        item={item}
+                                        index={index}
+                                        {...item}
+                                        chosenIds={chosenIds}
+                                        setChosenIds={setChosenIds}
+                                        onEdit={handleEdit}
+                                        onDelete={handleDelete}
+                                    />
+                                ))}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                )}
+            </DragDropContext>
+
+            {isLoading && (
+                <div className={s.loading}>Загрузка...</div>
+            )}
         </div>
     )
 }
