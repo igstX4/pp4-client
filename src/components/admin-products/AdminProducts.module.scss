@@ -60,6 +60,10 @@
         flex-direction: column;
         margin-top: 40px;
         gap: 15px;
+        &.isDraggingOver {
+            background-color: rgba(0, 0, 0, 0.02);
+            border-radius: 25px;
+        }
         .item {
             padding-right: 20px;
             height: 100px;
@@ -145,6 +149,20 @@
                     }
                 }
             }
+            cursor: grab;
+            user-select: none;
+            
+            &:active {
+                cursor: grabbing;
+            }
+            &.isDragging {
+                background: white;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+                opacity: 1;
+                transform: scale(1.02);
+                border: 2px solid #FFAAAA;
+            }
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
     }
 }
@@ -175,4 +193,27 @@
             stroke: rgb(247, 29, 29);
         }
     }
+}
+
+// Стили для элемента во время перетаскивания
+.isDragging {
+    background: #f8f8f8;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    font-size: 18px;
+    color: #666;
+}
+
+// Стиль для места, куда можно бросить элемент
+.droppablePlaceholder {
+    background-color: #f0f0f0;
+    border: 2px dashed #ccc;
+    margin: 8px 0;
+    border-radius: 25px;
 }

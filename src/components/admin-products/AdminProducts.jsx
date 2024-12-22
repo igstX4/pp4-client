@@ -8,11 +8,35 @@ import DateTimePicker from '../UI/DateTimePicker/DateTimePicker'
 import AddProductModal from '../modals/add-product-modal/add-product-modal'
 import ConfirmModal from '../modals/confirm-modal/confirm-modal'
 import EditProductModal from '../modals/edit-product-modal/edit-product-modal'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
-const Item = ({ _id, name, price, category, img, isVisible, isCommission, freeDate, descriptionMain, descriptionModal, setChosenIds, chosenIds, onDelete, onToggleVisibility, onToggleCommission, onSetFreeDate, onEdit }) => {
+const DraggableItem = ({ item, index, ...props }) => {
+    const {
+        _id,
+        name,
+        price,
+        category,
+        img,
+        isVisible,
+        isCommission,
+        freeDate,
+        descriptionMain,
+        descriptionModal,
+        setChosenIds,
+        chosenIds,
+        onDelete,
+        onToggleVisibility,
+        onToggleCommission,
+        onSetFreeDate,
+        onEdit
+    } = props;
+
     const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
     const [isEnabled, setIsEnabled] = useState(!!freeDate);
     const [selectedDateTime, setSelectedDateTime] = useState(freeDate ? new Date(freeDate) : null);
+
+    // Создаем стабильный ID для draggable
+    const draggableId = React.useMemo(() => `product-${_id}`, [_id]);
 
     // Функция для округления времени до следующего получаса
     const getNextHalfHour = () => {
@@ -77,74 +101,81 @@ const Item = ({ _id, name, price, category, img, isVisible, isCommission, freeDa
     }
 
     return (
-        <>
-            <div className={s.item}>
-                <div className={s.left}>
-                    <div className={s.checkbox}>
-                        <CheckBox
-                            isChecked={chosenIds.includes(_id)}
-                            onChange={handleCheckbox}
-                        />
+        <Draggable draggableId={draggableId} index={index}>
+            {(provided, snapshot) => (
+                <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    className={`${s.item} ${snapshot.isDragging ? s.isDragging : ''}`}
+                >
+                    <div className={s.left}>
+                        <div className={s.checkbox}>
+                            <CheckBox
+                                isChecked={chosenIds.includes(_id)}
+                                onChange={handleCheckbox}
+                            />
+                        </div>
+                        <div className={s.imgWrapper}>
+                            <img src={img} alt={name} />
+                        </div>
+                        <div className={s.info}>
+                            <p className={s.name}>{name}</p>
+                            <p className={s.category}>Категория: <span className={s.categoryValue}>{category?.name || 'Без категории'}</span></p>
+                        </div>
                     </div>
-                    <div className={s.imgWrapper}>
-                        <img src={img} alt={name} />
+                    <div className={s.right}>
+                        <div className={s.verticalLine}></div>
+                        <div className={s.date}>
+                            <Clock />
+                            <Toggle
+                                isChecked={isEnabled}
+                                onChange={handleToggle}
+                            />
+                            <DateTimePicker
+                                isEnabled={isEnabled}
+                                onChange={handleDateChange}
+                                value={selectedDateTime}
+                            />
+                        </div>
+                        <div className={s.strangeArrow}><StrangeArrow /></div>
+                        <div className={s.toggle2}>
+                            <Toggle
+                                isChecked={isVisible}
+                                onChange={handleToggleVisible}
+                            />
+                        </div>
+                        <div className={s.commission}>
+                            <Commission />
+                            <Toggle
+                                isChecked={isCommission}
+                                onChange={handleToggleCommission}
+                            />
+                        </div>
+                        <div className={s.edit} onClick={() => onEdit({ 
+                            _id, 
+                            name, 
+                            price, 
+                            category, 
+                            img, 
+                            descriptionMain, 
+                            descriptionModal 
+                        })}><Edit /></div>
+                        <div className={s.verticalLine2}></div>
+                        <div className={s.trash} onClick={() => setIsDeleteModalOpened(true)}><Trash /></div>
                     </div>
-                    <div className={s.info}>
-                        <p className={s.name}>{name}</p>
-                        <p className={s.category}>Категория: <span className={s.categoryValue}>{category?.name || 'Без категории'}</span></p>
-                    </div>
+                    <ConfirmModal 
+                        isModalOpened={isDeleteModalOpened}
+                        setIsModalOpened={setIsDeleteModalOpened}
+                        onConfirm={handleDelete}
+                        title="Удаление товара"
+                        text={`Вы действительно хотите удалить товар "${name}"?`}
+                    />
                 </div>
-                <div className={s.right}>
-                    <div className={s.verticalLine}></div>
-                    <div className={s.date}>
-                        <Clock />
-                        <Toggle
-                            isChecked={isEnabled}
-                            onChange={handleToggle}
-                        />
-                        <DateTimePicker
-                            isEnabled={isEnabled}
-                            onChange={handleDateChange}
-                            value={selectedDateTime}
-                        />
-                    </div>
-                    <div className={s.strangeArrow}><StrangeArrow /></div>
-                    <div className={s.toggle2}>
-                        <Toggle
-                            isChecked={isVisible}
-                            onChange={handleToggleVisible}
-                        />
-                    </div>
-                    <div className={s.commission}>
-                        <Commission />
-                        <Toggle
-                            isChecked={isCommission}
-                            onChange={handleToggleCommission}
-                        />
-                    </div>
-                    <div className={s.edit} onClick={() => onEdit({ 
-                        _id, 
-                        name, 
-                        price, 
-                        category, 
-                        img, 
-                        descriptionMain, 
-                        descriptionModal 
-                    })}><Edit /></div>
-                    <div className={s.verticalLine2}></div>
-                    <div className={s.trash} onClick={() => setIsDeleteModalOpened(true)}><Trash /></div>
-                </div>
-            </div>
-            <ConfirmModal 
-                isModalOpened={isDeleteModalOpened}
-                setIsModalOpened={setIsDeleteModalOpened}
-                onConfirm={handleDelete}
-                title="Удаление товара"
-                text={`Вы действительно хотите удалить товар "${name}"?`}
-            />
-        </>
-    )
-}
+            )}
+        </Draggable>
+    );
+};
 
 export const AdminProducts = () => {
     const [chosenIds, setChosenIds] = useState([])
@@ -154,11 +185,24 @@ export const AdminProducts = () => {
     const [categories, setCategories] = useState([])
     const [editingProduct, setEditingProduct] = useState(null)
     const [isEditModalOpened, setIsEditModalOpened] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
     const getProducts = async () => {
-        const {data} = await axios.get('/products')
-        setProducts(data)
-    }
+        try {
+            setIsLoading(true);
+            const { data } = await axios.get('/products');
+            // Проверяем наличие _id и добавляем временные id если их нет
+            const validProducts = data.map((product, index) => ({
+                ...product,
+                _id: product._id || `temp-${index}`
+            }));
+            setProducts(validProducts);
+        } catch (error) {
+            console.error('Ошибка при загрузке продуктов:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const getCategories = async () => {
         const {data} = await axios.get('/categories')
@@ -220,6 +264,30 @@ export const AdminProducts = () => {
         }
     }
 
+    const onDragEnd = async (result) => {
+        if (!result.destination) return;
+
+        try {
+            const items = Array.from(products);
+            const [reorderedItem] = items.splice(result.source.index, 1);
+            items.splice(result.destination.index, 0, reorderedItem);
+
+            // Обновляем состояние немедленно
+            setProducts(items);
+
+            // Извлекаем чистый ID из draggableId (убираем префикс 'product-')
+            const orders = items.map((item, index) => ({
+                id: item._id,
+                order: index
+            }));
+            
+            await axios.patch('/products/reorder', { orders });
+        } catch (error) {
+            console.error('Ошибка при обновлении порядка:', error);
+            getProducts();
+        }
+    };
+
     useEffect(() => {
         getProducts()
         getCategories()
@@ -257,21 +325,41 @@ export const AdminProducts = () => {
                     Добавить товар
                 </button>
             </div>
-            <div className={s.items}>
-                {products.map(item => (
-                    <Item
-                        key={item._id}
-                        {...item}
-                        chosenIds={chosenIds}
-                        setChosenIds={setChosenIds}
-                        onDelete={deleteProduct}
-                        onToggleVisibility={toggleVisibility}
-                        onToggleCommission={toggleCommission}
-                        onSetFreeDate={setFreeDate}
-                        onEdit={handleEdit}
-                    />
-                ))}
-            </div>
+            <DragDropContext onDragEnd={onDragEnd}>
+                {!isLoading && (
+                    <Droppable droppableId="products">
+                        {(provided, snapshot) => (
+                            <div
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                                className={`${s.items} ${snapshot.isDraggingOver ? s.isDraggingOver : ''}`}
+                            >
+                                {products.map((item, index) => (
+                                    <DraggableItem
+                                        key={item._id}
+                                        item={item}
+                                        index={index}
+                                        {...item}
+                                        chosenIds={chosenIds}
+                                        setChosenIds={setChosenIds}
+                                        onDelete={deleteProduct}
+                                        onToggleVisibility={toggleVisibility}
+                                        onToggleCommission={toggleCommission}
+                                        onSetFreeDate={setFreeDate}
+                                        onEdit={handleEdit}
+                                    />
+                                ))}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                )}
+            </DragDropContext>
+
+            {isLoading && (
+                <div className={s.loading}>Загрузка...</div>
+            )}
+
             <EditProductModal 
                 getProducts={getProducts}
                 isModalOpened={isEditModalOpened}
@@ -280,5 +368,5 @@ export const AdminProducts = () => {
                 product={editingProduct}
             />
         </div>
-    )
+    );
 }
