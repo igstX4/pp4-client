@@ -21,8 +21,8 @@ const Footer = ({setIsRulesModalOpened}) => {
     return (
         <Element name='footer'>
             <div className={s.footerWrapper}>
-            <img className={s.fishIcon5} src={fishIcon5} alt="fishIcon5" />
-            <img className={s.fishIcon6} src={fishIcon6} alt="fishIcon6" />
+            {/* <img className={s.fishIcon5} src={fishIcon5} alt="fishIcon5" />
+            <img className={s.fishIcon6} src={fishIcon6} alt="fishIcon6" /> */}
             <div className={s.footerContainer}>
                 <div className={s.top}>
                     <img className={s.grayFishIcon} src={gray_fish_icon} alt="gray_fish_icon" />

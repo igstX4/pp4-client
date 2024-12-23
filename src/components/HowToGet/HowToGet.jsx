@@ -22,8 +22,8 @@ const HowToGet = ({ setIsRulesModalOpened }) => {
     }
     return (
         <div className={s.howToGetWrapper}>
-            <img className={s.fishIcon3} src={fishIcon3} alt="fishIcon3" />
-            <img className={s.fishIcon4} src={fishIcon4} alt="fishIcon4" />
+            {/* <img className={s.fishIcon3} src={fishIcon3} alt="fishIcon3" />
+            <img className={s.fishIcon4} src={fishIcon4} alt="fishIcon4" /> */}
             <div className={s.howToGetContainer}>
                 <div className={s.linesWrapper}>
                     <div className={s.lines}>

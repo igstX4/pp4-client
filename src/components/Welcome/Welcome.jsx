@@ -19,8 +19,8 @@ const Welcome = () => {
     return (
         <Element name='welcome'>
             <div className={s.welcome}>
-                <img className={s.fishIcon1} src={fishIcon1} alt="fishIcon1" />
-                <img className={s.fishIcon2} src={fishIcon2} alt="fishIcon2" />
+                {/* <img className={s.fishIcon1} src={fishIcon1} alt="fishIcon1" />
+                <img className={s.fishIcon2} src={fishIcon2} alt="fishIcon2" /> */}
 
                 {/* <img src={line} alt="line" /> */}
                 <div className={s.wrapper}>
