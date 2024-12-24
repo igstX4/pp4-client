@@ -29,7 +29,7 @@ const Footer = ({setIsRulesModalOpened}) => {
                     <h1>Контакты</h1>
 
                     <div className={s.blocks}>
-                        <div className={s.block}>
+                        <div style={{cursor: 'pointer'}} onClick={() => window.open('https://vk.com/malcevidze')} className={s.block}>
                             <h5>Поддержка</h5>
                             <p>@yuliyamalcevidzerf4</p>
                         </div>
